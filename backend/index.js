@@ -4,21 +4,31 @@ require('dotenv').config();
 
 const app = express();
 
-// 1. ตั้งค่า Config (ดึงมาจาก Environment Variables ใน Render)
 const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
   channelSecret: process.env.CHANNEL_SECRET,
 };
 
-// 2. เส้นทาง Webhook สำหรับ Verify
-// middleware จะเช็คว่าข้อมูลที่ส่งมามาจาก LINE จริงหรือไม่ (ใช้ Channel Secret เช็ค)
+// ตรวจสอบเบื้องต้นใน Log ว่าค่าโหลดมาจริงไหม (จะเห็นในหน้า Logs ของ Render)
+console.log("Check Secret:", config.channelSecret ? "Found" : "Not Found");
+
+// หน้าแรกสุด เอาไว้เช็คว่าเว็บออนไลน์ไหม
+app.get('/', (req, res) => {
+  res.send('Server is Online!');
+});
+
+// Webhook
 app.post('/webhook', line.middleware(config), (req, res) => {
-  // ตอบกลับสถานะ 200 ทันที เพื่อบอก LINE ว่า "ฉันได้รับข้อมูลแล้วนะ และเซิร์ฟเวอร์ฉันปกติ"
   res.sendStatus(200);
 });
 
-// 3. เริ่มต้นเซิร์ฟเวอร์
+// Error Handler: ถ้ามีอะไรพัง มันจะพ่นออกมาใน Logs ไม่ให้ขึ้น 500 เฉยๆ
+app.use((err, req, res, next) => {
+  console.error("Error detected:", err.message);
+  res.status(500).send('Internal Server Error');
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`🚀 Ready on port ${PORT}`);
 });
