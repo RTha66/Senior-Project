@@ -9,32 +9,38 @@ const config = {
   channelSecret: process.env.CHANNEL_SECRET,
 };
 
-// สร้าง Client สำหรับส่งข้อความกลับ
+// สร้าง Client สำหรับส่งข้อความ
 const client = new line.messagingApi.MessagingApiClient({
   channelAccessToken: config.channelAccessToken
 });
 
-// Webhook
+// Webhook Route
 app.post('/webhook', line.middleware(config), (req, res) => {
   res.sendStatus(200);
-  // จัดการกับทุกข้อความที่ส่งเข้ามา
+
+  // ไล่ตรวจเช็คทุกข้อความที่ส่งมา
   Promise.all(req.body.events.map(handleEvent))
-    .catch((err) => console.error(err));
+    .catch((err) => console.error("Error handler:", err));
 });
 
-// ฟังก์ชันหลักที่สั่งให้บอทพูด
+// ฟังก์ชันสั่งให้บอทพูดตาม
 async function handleEvent(event) {
-  // ถ้าไม่ใช่ข้อความตัวอักษร ไม่ต้องทำอะไร
-  if (event.type !== 'message' || event.message.type !== 'text') return null;
+  // ถ้าไม่ใช่ข้อความ (Message) หรือไม่ใช่ตัวหนังสือ (Text) ให้ข้ามไป
+  if (event.type !== 'message' || event.message.type !== 'text') {
+    return null;
+  }
 
-  // ส่งข้อความกลับไปหา User (ทวนคำพูด)
+  // ส่งข้อความกลับไปหา User
   return client.replyMessage({
     replyToken: event.replyToken,
-    messages: [{ type: 'text', text: `คุณพิมพ์ว่า: ${event.message.text}` }]
+    messages: [{
+      type: 'text',
+      text: `คุณพิมพ์มาว่า: ${event.message.text}` // นี่คือส่วนที่บอทพิมพ์ตาม
+    }]
   });
 }
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Bot is ready!`);
+  console.log(`🚀 Bot is ready and listening on port ${PORT}`);
 });
