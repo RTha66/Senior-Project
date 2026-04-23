@@ -9,26 +9,32 @@ const config = {
   channelSecret: process.env.CHANNEL_SECRET,
 };
 
-// ตรวจสอบเบื้องต้นใน Log ว่าค่าโหลดมาจริงไหม (จะเห็นในหน้า Logs ของ Render)
-console.log("Check Secret:", config.channelSecret ? "Found" : "Not Found");
-
-// หน้าแรกสุด เอาไว้เช็คว่าเว็บออนไลน์ไหม
-app.get('/', (req, res) => {
-  res.send('Server is Online!');
+// สร้าง Client สำหรับส่งข้อความกลับ
+const client = new line.messagingApi.MessagingApiClient({
+  channelAccessToken: config.channelAccessToken
 });
 
 // Webhook
 app.post('/webhook', line.middleware(config), (req, res) => {
   res.sendStatus(200);
+  // จัดการกับทุกข้อความที่ส่งเข้ามา
+  Promise.all(req.body.events.map(handleEvent))
+    .catch((err) => console.error(err));
 });
 
-// Error Handler: ถ้ามีอะไรพัง มันจะพ่นออกมาใน Logs ไม่ให้ขึ้น 500 เฉยๆ
-app.use((err, req, res, next) => {
-  console.error("Error detected:", err.message);
-  res.status(500).send('Internal Server Error');
-});
+// ฟังก์ชันหลักที่สั่งให้บอทพูด
+async function handleEvent(event) {
+  // ถ้าไม่ใช่ข้อความตัวอักษร ไม่ต้องทำอะไร
+  if (event.type !== 'message' || event.message.type !== 'text') return null;
+
+  // ส่งข้อความกลับไปหา User (ทวนคำพูด)
+  return client.replyMessage({
+    replyToken: event.replyToken,
+    messages: [{ type: 'text', text: `คุณพิมพ์ว่า: ${event.message.text}` }]
+  });
+}
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Ready on port ${PORT}`);
+  console.log(`🚀 Bot is ready!`);
 });
