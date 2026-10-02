@@ -1,27 +1,21 @@
 import React, { useState } from 'react';
 import bunny from '../../assets/bunny.svg';
 import carrot from '../../assets/carrot.svg';
-import leftArrow from '../../assets/icon_leftArrow.svg';
 
-// component จะเป็นขึ้นต้นตัวใหญ่
-function BottomNav({ onBack, onNext }) {
-    return (
-        <div className='flex justify-between items-center w-full gap-2'>
-            <button onClick={onBack}
-                className='w-[14vw] h-[14vw] flex items-center justify-center rounded-full bg-babypinkk text-blackk hover:bg-gray-200 transition-color'
-                >
-                     <img src={leftArrow} alt="back" className="w-[50%]" />
-                </button>
-            <button onClick={onNext}
-                className='bg-bluee text-h4 text-blackk font-semibold py-[1.7vh] px-[8vh] flex-1 rounded-full'
-                >Next</button>
-        </div>
-    );
-}
+import BottomNav from './BottomNav';
+import ExpenseQuestion from './ExpenseQuestion';
+import CurrencyInput from '../../components/CurrencyInput';
 
 function OnboardingPage(){
     const [step, setStep] = useState(0);
     const totalQuestions = [1, 2, 3, 4, 5];
+
+    const [salary, setSalary] = useState('');
+    const [expenseItems, setExpenseItems] = useState([
+        {id: 1, name: 'หนี้กยศ.', checked: false, amount: '' },
+        {id: 2, name: 'ค่าที่พัก', checked: false, amount: '' },
+        {id: 3, name: 'ค่าผ่อนรถ', checked: false, amount: '' },
+    ])
     
     const getBunnyPosition = () => {
         if (step === 0) return 'translate-y-[calc(100vh-90vw)]';
@@ -36,16 +30,11 @@ function OnboardingPage(){
                     <>
                         <p className='text-blackk mb-[1vh]'>นี่ๆ ขอถามอะไรหน่อยสิ</p>
                         <h2 className='text-h4 font-medium text-blackk'>เธอมีเงินเดือนเท่าไหร่หรอ</h2>
-                        <input className='w-3/4 text-center text-[clamp(1.2rem,5vw,1.5rem)] m-[2vh] pb-[1vh] border-b-2 border-gray-300 focus:outline-none focus:border-pinkk transition-colors mb-[4vh]' placeholder='กรอกเงินเดือน' />
+                        <CurrencyInput placeholder="กรอกเงินเดือน" value={salary} onChange={setSalary} className='w-3/4 text-center text-[clamp(1.2rem,5vw,1.5rem)] m-[2vh] pb-[1vh] border-b-2 border-gray-300 focus:outline-none focus:border-pinkk transition-colors mb-[4vh]' />
                     </>
                 );
             case 2:
-                return (
-                    <>
-                        <h2 className='text-h4 font-medium text-blackk px-[2vw]'>ตอนนี้เธอมีค่าใช้จ่ายที่ต้องจ่ายทุกเดือนไหม</h2>
-                        <div></div>
-                    </>
-                );
+                return <ExpenseQuestion items={expenseItems} setItems={setExpenseItems} />;
             case 3:
                 return (
                     <>
@@ -57,6 +46,8 @@ function OnboardingPage(){
                 return null;
         }
     }
+
+    // const salaryChange
 
     return (
         // ใช้ min-h-[100dvh] เพราะว่ามันจะรวมในส่วนของแถบ URL มาด้วย ถ้าเป็น vh ธรรมดาจะไม่รวมจะทำให้ตอนแสดงมันจะโดนบังได้
