@@ -10,6 +10,7 @@
   --color-babypinkk: #FFDFEF;
   --color-bluee: #AEDEFC;
 
+  --text-h1: clamp(1.625rem,7vw,2.5rem);
     /* ขนาดปม. 20 ใหญ่สุด 28 */
   --text-h2: clamp(1.3rem, 6.5vw, 1.8rem);
     /* ขนาดปม. 18 ใหญ่สุด 24 */
@@ -41,5 +42,8 @@
   
   * {
     box-sizing: inherit;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }

@@ -5,17 +5,21 @@ import carrot from '../../assets/carrot.svg';
 import BottomNav from './BottomNav';
 import ExpenseQuestion from './ExpenseQuestion';
 import CurrencyInput from '../../components/CurrencyInput';
+import PriorityQuestion from './PriorityQuestion';
 
 function OnboardingPage(){
     const [step, setStep] = useState(0);
     const totalQuestions = [1, 2, 3, 4, 5];
 
     const [salary, setSalary] = useState('');
+
     const [expenseItems, setExpenseItems] = useState([
         {id: 1, name: 'หนี้กยศ.', checked: false, amount: '' },
         {id: 2, name: 'ค่าที่พัก', checked: false, amount: '' },
         {id: 3, name: 'ค่าผ่อนรถ', checked: false, amount: '' },
     ])
+
+    const [priorityChoice, setPriorityChoice] = useState(null);
     
     const getBunnyPosition = () => {
         if (step === 0) return 'translate-y-[calc(100vh-90vw)]';
@@ -28,18 +32,17 @@ function OnboardingPage(){
             case 1:
                 return (
                     <>
-                        <p className='text-blackk mb-[1vh]'>นี่ๆ ขอถามอะไรหน่อยสิ</p>
-                        <h2 className='text-h4 font-medium text-blackk'>เธอมีเงินเดือนเท่าไหร่หรอ</h2>
-                        <CurrencyInput placeholder="กรอกเงินเดือน" value={salary} onChange={setSalary} className='w-3/4 text-center text-[clamp(1.2rem,5vw,1.5rem)] m-[2vh] pb-[1vh] border-b-2 border-gray-300 focus:outline-none focus:border-pinkk transition-colors mb-[4vh]' />
+                        <p className='text-blackk mb-[1vh] leading-relaxed'>นี่ๆ ขอถามอะไรหน่อยสิ</p>
+                        <h2 className='text-h4 font-medium text-blackk leading-relaxed'>เธอมีเงินเดือนเท่าไหร่หรอ</h2>
+                        <CurrencyInput placeholder="กรอกเงินเดือน" value={salary} onChange={setSalary} className='w-3/4 text-center font-bold placeholder:font-normal placeholder:text-h3 text-h1 m-[2vh] pb-[1vh] border-b-2 border-gray-300 focus:outline-none focus:border-pinkk transition-colors mb-[4vh]' />
                     </>
                 );
             case 2:
-                return <ExpenseQuestion items={expenseItems} setItems={setExpenseItems} />;
+                return <ExpenseQuestion items={expenseItems} setItems={setExpenseItems} />
             case 3:
                 return (
                     <>
-                        <h2 className='text-h4 font-medium text-blackk px-[2vw]'>ถ้าตอนนี้เธอมีเงินอยู่ 20,000 บาท สิ่งที่อยากทำที่สุดตอนนี้คืออะไรเหรอ</h2>
-
+                        <PriorityQuestion selectedID={priorityChoice} setSelectedID={setPriorityChoice} />
                     </>
                 );
             default:
