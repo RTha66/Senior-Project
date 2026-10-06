@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import bunny from '../../assets/bunny.svg';
 import carrot from '../../assets/carrot.svg';
 
@@ -6,6 +6,8 @@ import BottomNav from './BottomNav';
 import ExpenseQuestion from './ExpenseQuestion';
 import CurrencyInput from '../../components/CurrencyInput';
 import PriorityQuestion from './PriorityQuestion';
+import CreditAttitudeQuestion from './CreditAttitudeQuestion';
+import FinancialGoalQuestion from './FinancialGoalQuestion';
 
 function OnboardingPage(){
     const [step, setStep] = useState(0);
@@ -20,6 +22,10 @@ function OnboardingPage(){
     ])
 
     const [priorityChoice, setPriorityChoice] = useState(null);
+
+    const [creditChoice, setCreditChoice] = useState(null);
+
+    const [goalChoice, setGoalChoice] = useState(null);
     
     const getBunnyPosition = () => {
         if (step === 0) return 'translate-y-[calc(100vh-90vw)]';
@@ -40,11 +46,11 @@ function OnboardingPage(){
             case 2:
                 return <ExpenseQuestion items={expenseItems} setItems={setExpenseItems} />
             case 3:
-                return (
-                    <>
-                        <PriorityQuestion selectedID={priorityChoice} setSelectedID={setPriorityChoice} />
-                    </>
-                );
+                return <PriorityQuestion selectedID={priorityChoice} setSelectedID={setPriorityChoice} />
+            case 4:
+                return <CreditAttitudeQuestion selectedID={creditChoice} setSelectedID={setCreditChoice}/>
+            case 5:
+                return <FinancialGoalQuestion selectedID={goalChoice} setSelectedID={setGoalChoice} />
             default:
                 return null;
         }
