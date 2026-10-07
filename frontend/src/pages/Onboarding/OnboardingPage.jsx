@@ -14,7 +14,7 @@ function OnboardingPage(){
     const [salary, setSalary] = useState('');
 
     const [expenseItems, setExpenseItems] = useState([
-        {id: 1, name: 'หนี้กยศ.', checked: false, amount: '' },
+        {id: 1, name: 'ค่าโทรศัพท์', checked: false, amount: '' },
         {id: 2, name: 'ค่าที่พัก', checked: false, amount: '' },
         {id: 3, name: 'ค่าผ่อนรถ', checked: false, amount: '' },
     ])
