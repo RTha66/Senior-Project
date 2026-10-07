@@ -14,6 +14,7 @@ export default function ExpenseQuestion({ items, setItems }) {
     const [nameError, setNameError] = useState('');
     const [amountError, setAmountError] = useState('');
 
+    // เปลี่ยนค่า checked
     const toggleChecked = (id) => {
         setItems(items.map(item => item.id === id ? { ...item, checked: !item.checked } : item))
     }
