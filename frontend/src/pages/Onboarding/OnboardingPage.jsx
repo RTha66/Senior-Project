@@ -70,7 +70,7 @@ function OnboardingPage(){
                 return (
                     <>
                         <p className='text-blackk mb-[1vh] leading-relaxed'>นี่ๆ ขอถามอะไรหน่อยสิ</p>
-                        <h2 className='text-h4 font-medium text-blackk leading-relaxed'>เธอมีเงินเดือนเท่าไหร่หรอ</h2>
+                        <h2 className='text-h4 font-medium text-blackk leading-relaxed'>เธอมีรายรับต่อเดือนเท่าไหร่หรอ</h2>
                         <CurrencyInput placeholder="กรอกเงินเดือน" value={salary} onChange={setSalary} className='w-3/4 text-center font-bold placeholder:font-normal placeholder:text-h3 text-h1 m-[2vh] pb-[1vh] border-b-2 border-gray-300 focus:outline-none focus:border-pinkk transition-colors mb-[4vh]' />
                     </>
                 );
