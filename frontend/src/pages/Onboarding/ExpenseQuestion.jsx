@@ -60,6 +60,8 @@ export default function ExpenseQuestion({ items, setItems }) {
 
         setEditingItem(null);
     }
+    // เอา items ทั้งหมดมาจัดเรียง 1 = true 0 = false แล้วก็เอามาลบกันเพื่อหาลำดับ
+    const sortedItems = [...items].sort((a, b) => b.checked - a.checked);
 
     return (
         <div className="flex flex-col items-center w-full">
@@ -68,7 +70,7 @@ export default function ExpenseQuestion({ items, setItems }) {
             </h2>
             <div className="flex flex-col w-full gap-[1.5vh] px-[1vh] pb-[6dvh] mt-[4vh] overflow-y-auto max-h-[calc(100dvh-90vw-11dvh)] hide-scrollbar ">
                 {/* วนไปแต่ละไอเท็ม */}
-                {items.map((item) => (
+                {sortedItems.map((item) => (
                     <div key={item.id}
                         className={`flex items-center gap-[2vh] w-full p-[2vh] border-[1.5px] rounded-xl transition-all 
                             ${item.checked ? 'border-pinkk bg-pink-50' : 'border-babyblue bg-white'} `}>

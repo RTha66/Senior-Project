@@ -5,9 +5,7 @@ import carrot from '../../assets/carrot.svg';
 import BottomNav from './BottomNav';
 import ExpenseQuestion from './ExpenseQuestion';
 import CurrencyInput from '../../components/CurrencyInput';
-import PriorityQuestion from './PriorityQuestion';
-import CreditAttitudeQuestion from './CreditAttitudeQuestion';
-import FinancialGoalQuestion from './FinancialGoalQuestion';
+import SingleChoiceQuestion from './singleChoiceQuestion';
 
 function OnboardingPage(){
     const [step, setStep] = useState(0);
@@ -26,6 +24,39 @@ function OnboardingPage(){
     const [creditChoice, setCreditChoice] = useState(null);
 
     const [goalChoice, setGoalChoice] = useState(null);
+
+    const SINGLE_CHOICE_QUESTIONS = {
+        3: {
+            title: 'ถ้าตอนนี้เธอมีเงินอยู่ 20,000 บาท สิ่งที่อยากทำที่สุดตอนนี้คืออะไรเหรอ',
+            options: [
+                { id: 1, text: 'ถอยโทรศัพท์รุ่นใหม่ที่เล็งไว้นานแล้วทันที' },
+                { id: 2, text: 'ฝากเข้าบัญชีออมทรัพย์เก็บไว้ให้อุ่นใจ' },
+                { id: 3, text: 'แบ่งออมนิดหน่อย ที่เหลือเอาไว้สอยของที่เคยใส่ในตะกร้า' },
+                { id: 4, text: 'รีบเอาไปจ่ายโปะหนี้ที่ค้างไว้' },
+                { id: 5, text: 'นำไปซื้อกองทุนหรือหุ้น' },
+            ]
+        },
+        4: {
+            title: 'เวลาพูดถึงเรื่อง “บัตรเครดิต” หรือ “หนี้สิน” เธอรู้สึกอย่างไร',
+            options: [
+                { id: 1, text: 'รูดไปก่อนค่อยว่ากัน' },
+                { id: 2, text: 'เลี่ยงได้เลี่ยง! ไม่ชอบเป็นหนี้ใคร' },
+                { id: 3, text: 'รูดซื้อของเล็กๆน้อยๆ แต่ถ้าเริ่มเห็นยอด สูงจะเริ่มเครียดแล้วยังตัวเองไม่ให้รูดต่อ' },
+                { id: 4, text: 'หมุนเงินไม่ทัน มีหนี้หลายก้อนจนจำไม่ได้' },
+                { id: 5, text: 'มองเป็นเครื่องมือสะสมแต้มหรือสิทธิประโยชน์รูดเต็มจำนวนและจ่ายตรงเวลา' },
+            ]
+        },
+        5: {
+            title: 'เธอวางแผนการเงินของตัวเองในอีก 1-3 ปีข้างหน้าว่าอย่างไรบ้าง',
+            options: [
+                { id: 1, text: 'เน้นเก็บเงินสำรองฉุกเฉิน / สร้างความมั่นคงขั้นแรก' },
+                { id: 2, text: 'ตั้งใจปลดหนี้สินที่มีอยู่ให้หมดเรียบร้อย' },
+                { id: 3, text: 'วางแผนซื้อทรัพย์สินใหญ่ (เช่น บ้าน, รถ, แต่งงาน)' },
+                { id: 4, text: 'ลงทุนให้เงินทำงาน / สร้างพอร์ตให้เติบโต' },
+                { id: 5, text: 'ยังไม่ได้คิดแผนชัดเจน เน้นใช้ชีวิตไปทีละวันก่อน' },
+            ]
+        },
+    }
     
     const getBunnyPosition = () => {
         if (step === 0) return 'translate-y-[calc(100vh-90vw)]';
@@ -46,17 +77,58 @@ function OnboardingPage(){
             case 2:
                 return <ExpenseQuestion items={expenseItems} setItems={setExpenseItems} />
             case 3:
-                return <PriorityQuestion selectedID={priorityChoice} setSelectedID={setPriorityChoice} />
+                // return <PriorityQuestion selectedID={priorityChoice} setSelectedID={setPriorityChoice} />
+                return (
+                    < SingleChoiceQuestion
+                        title={SINGLE_CHOICE_QUESTIONS[3].title}
+                        options={SINGLE_CHOICE_QUESTIONS[3].options}
+                        selectedID={priorityChoice}
+                        onSelectedID={setPriorityChoice}
+                    />
+                )
             case 4:
-                return <CreditAttitudeQuestion selectedID={creditChoice} setSelectedID={setCreditChoice}/>
+                // return <CreditAttitudeQuestion selectedID={creditChoice} setSelectedID={setCreditChoice}/>
+                return (
+                    < SingleChoiceQuestion
+                        title={SINGLE_CHOICE_QUESTIONS[4].title}
+                        options={SINGLE_CHOICE_QUESTIONS[4].options}
+                        selectedID={creditChoice}
+                        onSelectedID={setCreditChoice}
+                    />
+                )
             case 5:
-                return <FinancialGoalQuestion selectedID={goalChoice} setSelectedID={setGoalChoice} />
+                // return <FinancialGoalQuestion selectedID={goalChoice} setSelectedID={setGoalChoice} />
+                return (
+                    < SingleChoiceQuestion
+                        title={SINGLE_CHOICE_QUESTIONS[5].title}
+                        options={SINGLE_CHOICE_QUESTIONS[5].options}
+                        selectedID={goalChoice}
+                        onSelectedID={setGoalChoice}
+                    />
+                )
             default:
                 return null;
         }
     }
-
-    // const salaryChange
+    
+    // ส่งค่าเป็น True or False โดยถ้าเป็น True คือ ไม่แสดง ส่วนถ้าเป็น False คือแสดง
+    // ถ้าเข้าเงื่อนไขด้านล่างก็คือเป็น true ก็คือไม่แสดง
+    const isNextDisabled = () => {
+        switch (step){
+            case 1:
+                return !salary || Number(salary) <= 0;
+            case 2:
+                return false;
+            case 3:
+                return priorityChoice === null;
+            case 4:
+                return creditChoice === null;
+            case 5:
+                return goalChoice === null;
+            default:
+                return false;
+        }
+    }
 
     return (
         // ใช้ min-h-[100dvh] เพราะว่ามันจะรวมในส่วนของแถบ URL มาด้วย ถ้าเป็น vh ธรรมดาจะไม่รวมจะทำให้ตอนแสดงมันจะโดนบังได้
@@ -105,6 +177,7 @@ function OnboardingPage(){
                     <BottomNav
                         onBack={() => setStep(step - 1)}
                         onNext={() => setStep(step + 1)}
+                        disable={isNextDisabled()}
                     />
                 </div>
             )}
