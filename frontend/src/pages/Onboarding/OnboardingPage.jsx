@@ -1,14 +1,42 @@
-import React, { use, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { checkHasOnboarded, completeOnboarding } from '../../services/userService';
+
 import bunny from '../../assets/bunny.svg';
 import carrot from '../../assets/carrot.svg';
 
-import BottomNav from './BottomNav';
+import StepNav from './StepNav';
 import ExpenseQuestion from './ExpenseQuestion';
 import CurrencyInput from '../../components/CurrencyInput';
 import SingleChoiceQuestion from './singleChoiceQuestion';
 
 function OnboardingPage(){
+    const navigate = useNavigate();
     const [step, setStep] = useState(0);
+
+    useEffect(() => {
+        async function verifyStatus() {
+            const isCompleted = await checkHasOnboarded();
+            if (isCompleted) {
+                navigate('/dashboard', { replace: true});
+            }
+        }
+        verifyStatus();
+        // navigate เป็นค่าไม่เปลี่ยนแปลงอยู่แล้วการเอามาใส่เพราะว่าถ้าหยิบตัวแปรภายนอกมาใช้ใน useEffect ต้องใส่ใน [] ด้วย
+        // ถ้าค่าไม่เปลี่ยนแปลงก็เหมือน [] เปล่าๆก็คือรันแค่ตอนแรกที่เปิดหน้าเว็บขึ้นมารอบเดียว
+    },  [navigate]);
+
+    // ดักจับตอนกด Next ในข้อสุดท้าย
+    const handelNext = async () => {
+        if (step >= 5) {
+            // บันทึกสถานะว่าทำเสร็จแล้ว
+            await completeOnboarding({ salary, expenseItems });
+            navigate('/dashboard');
+        } else {
+            setStep(step + 1);
+        }
+    }
+
     const totalQuestions = [1, 2, 3, 4, 5];
 
     const [salary, setSalary] = useState('');
@@ -174,9 +202,9 @@ function OnboardingPage(){
             {/* แถบตรง navbar ด้านล่าง */}
             {step >= 1 && (
                 <div className='absolute bottom-0 left-0 w-full bg-white z-50 px-[6vw] pt-[2vh] pb-[3vh]'>
-                    <BottomNav
+                    <StepNav
                         onBack={() => setStep(step - 1)}
-                        onNext={() => setStep(step + 1)}
+                        onNext={handelNext}
                         disable={isNextDisabled()}
                     />
                 </div>

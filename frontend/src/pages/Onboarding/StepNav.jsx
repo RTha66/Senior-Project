@@ -2,7 +2,7 @@ import React from "react";
 import leftArrow from '../../assets/icon_leftArrow.svg';
 
 // component จะเป็นขึ้นต้นตัวใหญ่
-function BottomNav({ onBack, onNext, disable}) {
+function StepNav({ onBack, onNext, disable}) {
     return (
         <div className='flex justify-between items-center w-full gap-2'>
             <button onClick={onBack}
@@ -17,4 +17,4 @@ function BottomNav({ onBack, onNext, disable}) {
     );
 }
 
-export default BottomNav;
+export default StepNav;
