@@ -9,6 +9,10 @@
   --color-pOn: #FDEDED;
   --color-babypinkk: #FFDFEF;
   --color-bluee: #AEDEFC;
+  --color-violet: #C5BAFF;
+  --color-active: #5C438A;
+  --color-maiactive: #7A6FA8;
+
 
   --text-h1: clamp(1.625rem,7vw,2.5rem);
     /* ขนาดปม. 20 ใหญ่สุด 28 */
