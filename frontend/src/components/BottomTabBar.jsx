@@ -55,7 +55,7 @@ export default function BottomTabBar(){
                     return (
                         <button key={item.id} onClick={() => navigate(item.path)}
                             className={`flex items-center justify-center transition-all duration-300 border-none
-                                ${isActive ? 'flex-row gap-2 bg-white text-active px-2.5 py-3 rounded-full font-semibold shadow-md':'flex-col gap-1 text-maiactive bg-transparent py-1 px-3 text-[12px]'}`}
+                                ${isActive ? 'flex-row gap-2 bg-white text-active px-2.5 py-3 rounded-full font-semibold shadow-md transition-all duration-300':'flex-col gap-1 text-maiactive bg-transparent py-1 px-3 text-[12px] transition-none'}`}
                             >
                             <Icon size={22} stroke={2} className="shrink-0" />
                             <span className={isActive ? 'text-[12px] font-bold':'text-[12px]'}>

@@ -12,6 +12,7 @@
   --color-violet: #C5BAFF;
   --color-active: #5C438A;
   --color-maiactive: #7A6FA8;
+  --color-bgpage: #FBFBFB;
 
 
   --text-h1: clamp(1.625rem,7vw,2.5rem);
