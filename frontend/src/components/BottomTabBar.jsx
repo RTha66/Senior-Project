@@ -22,7 +22,7 @@ const NAV_ITEMS = [
     {id: 'calculators', label: 'คำนวณ', path: '/calculators', icon: IconCalculator},
 ];
 
-export default function BottomTabBar(){
+export default function BottomTabBar() {
     const navigate = useNavigate();
     const location = useLocation();
 

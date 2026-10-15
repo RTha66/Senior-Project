@@ -11,6 +11,7 @@ export default function CurrencyInput({value, onChange, placeholder, className }
         if (rawValue === '') {
             onChange('');
         } else if (!isNaN(rawValue)) {
+            if (rawValue.length > 15) return;
             // ตรงนี้เป็นค่าที่รับมาจากฟังก์ชัน
             onChange(Number(rawValue));
         }

@@ -13,4 +13,5 @@ export async function checkHasOnboarded() {
 // ล้างค่าเพื่อกด test Onboarding
 export async function resetOnboarding() {
     localStorage.removeItem('hasOnboarded')
+    localStorage.removeItem('has_seen_goals_popup')
 }
