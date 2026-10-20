@@ -68,4 +68,15 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* .custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #D1D5DB;
+    border-radius: 9999px;
+  } */
 }

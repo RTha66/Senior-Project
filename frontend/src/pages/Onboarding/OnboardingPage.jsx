@@ -9,6 +9,7 @@ import StepNav from './StepNav';
 import ExpenseQuestion from './ExpenseQuestion';
 import CurrencyInput from '../../components/CurrencyInput';
 import SingleChoiceQuestion from './singleChoiceQuestion';
+import IncomeQusetion from './IncomeQuestion';
 
 function OnboardingPage(){
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ function OnboardingPage(){
     const handelNext = async () => {
         if (step >= 5) {
             // บันทึกสถานะว่าทำเสร็จแล้ว
-            await completeOnboarding({ salary, expenseItems });
+            await completeOnboarding({ incomeItems, expenseItems });
             navigate('/dashboard');
         } else {
             setStep(step + 1);
@@ -39,7 +40,11 @@ function OnboardingPage(){
 
     const totalQuestions = [1, 2, 3, 4, 5];
 
-    const [salary, setSalary] = useState('');
+    // const [salary, setSalary] = useState('');
+    const [incomeItems, setIncomeItems] = useState([
+        {id: 1, name: 'เงินเดือน', checked: false, amount: '', date: '25'},
+        {id: 2, name: 'รายได้เสริม', checked: false, amount: '', date: ''},
+    ])
 
     const [expenseItems, setExpenseItems] = useState([
         {id: 1, name: 'ค่าโทรศัพท์', checked: false, amount: '' },
@@ -88,20 +93,21 @@ function OnboardingPage(){
     
     const getBunnyPosition = () => {
         if (step === 0) return 'translate-y-[calc(100vh-90vw)]';
-        if (step === 1) return 'translate-y-[calc(53vh-75vw)]';
+        // if (step === 1) return 'translate-y-[calc(53vh-75vw)]';
         return 'translate-y-[-10vh]';
     }
     // ฟังก์ชันช่วยเหลือจะเป็น ขึ้นต้นด้วยตัวเล็ก
     const question = () => {
         switch(step) {
             case 1:
-                return (
-                    <>
-                        <p className='text-blackk mb-[1vh] leading-relaxed'>นี่ๆ ขอถามอะไรหน่อยสิ</p>
-                        <h2 className='text-h4 font-medium text-blackk leading-relaxed'>เธอมีรายรับต่อเดือนเท่าไหร่หรอ</h2>
-                        <CurrencyInput placeholder="กรอกเงินเดือน" value={salary} onChange={setSalary} className='w-3/4 text-center font-bold placeholder:font-normal placeholder:text-h3 text-h1 m-[2vh] pb-[1vh] border-b-2 border-gray-300 focus:outline-none focus:border-pinkk transition-colors mb-[4vh]' />
-                    </>
-                );
+                return <IncomeQusetion items={incomeItems} setItems={setIncomeItems} />
+                // return (
+                //     <>
+                //         <p className='text-blackk mb-[1vh] leading-relaxed'>นี่ๆ ขอถามอะไรหน่อยสิ</p>
+                //         <h2 className='text-h4 font-medium text-blackk leading-relaxed'>เธอมีรายรับต่อเดือนเท่าไหร่หรอ</h2>
+                //         <CurrencyInput placeholder="กรอกเงินเดือน" value={salary} onChange={setSalary} className='w-3/4 text-center font-bold placeholder:font-normal placeholder:text-h3 text-h1 m-[2vh] pb-[1vh] border-b-2 border-gray-300 focus:outline-none focus:border-pinkk transition-colors mb-[4vh]' />
+                //     </>
+                // );
             case 2:
                 return <ExpenseQuestion items={expenseItems} setItems={setExpenseItems} />
             case 3:
@@ -144,7 +150,8 @@ function OnboardingPage(){
     const isNextDisabled = () => {
         switch (step){
             case 1:
-                return !salary || Number(salary) <= 0;
+                // return !salary || Number(salary) <= 0;
+                return false;
             case 2:
                 return false;
             case 3:

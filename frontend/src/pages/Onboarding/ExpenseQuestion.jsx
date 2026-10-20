@@ -43,6 +43,10 @@ export default function ExpenseQuestion({ items, setItems }) {
         if (!editingItem.name || !editingItem.name.trim()) {
             setNameError('กรุณากรอกชื่อรายการ')
             hasError = true;
+            // ถ้ามีแต่ตัวเลข
+        } else if (!/[a-zA-Zก-ฮ]/.test(editingItem.name)) {
+            setNameError('กรุณากรอกตัวอักษร')
+            hasError = true;
         }
         if (!editingItem.amount || Number(editingItem.amount) <= 0) {
             setAmountError('กรุณากรอกจำนวนเงินให้ถูกต้อง')
@@ -86,7 +90,7 @@ export default function ExpenseQuestion({ items, setItems }) {
                             className="flex flex-1 items-center justify-between">
                             <span className={`text-left text-p ${item.checked ? 'text-blackk' : 'text-gray-400'}`}>{item.name}</span>
                             <div className="flex items-center gap-[2vw]">
-                                <span className={`font-bold text-p ${item.checked ? 'text-blackk' : 'text-gray-400 opacity-50'}`}>{item.amount || '0'}</span>
+                                <span className={`font-bold text-p ${item.checked ? 'text-blackk' : 'text-gray-400 opacity-50'}`}>{item.amount ? Number(item.amount).toLocaleString('th-TH') : '0'}</span>
                                 <span className={`text-p ${item.checked ? 'text-blackk' : 'text-gray-400 opacity-50'}`}>บาท</span>
                             </div>
                         </div>
@@ -108,8 +112,11 @@ export default function ExpenseQuestion({ items, setItems }) {
                             {editingItem.id == null ? 'เพิ่มรายการค่าใช้จ่าย' : 'แก้ไขรายการ'}
                         </h3>
                         <div className="flex flex-col gap-1">
-                            <label className="text-p text-blackk">ชื่อรายการ</label>
-                            <input type="text" placeholder="เช่น ค่าน้ำ ค่าไฟ..."
+                            <div className="flex justify-between items-center">
+                                <label className="text-p text-blackk">ชื่อรายการ</label>
+                                <span className="text-sm text-gray-400">{editingItem.name?.length || 0}/25</span>
+                            </div>
+                            <input type="text" placeholder="เช่น ค่าน้ำ ค่าไฟ..." maxLength={25}
                                 // ตรง nameError ปกติเป็นค่า '' คือ False เลยแสดงเป็นขอบเทา ก็คือไม่ Error แต่ถ้า nameError คือ 'กรุณากรอกชื่อรายการ' ก็คือ True เพราะว่ามีค่า ก็จะแสดงเป็นสีแดง ซึ่งคือไม่ได้กรอกชื่อต้อง Error
                                 className={`w-full bg-gray-50 border-[1.5px] rounded-xl p-3 focus:outline-none 
                                     ${nameError ? 'border-red-500 focus:border-red-500':'border-gray-200 focus:border-bluee'}`}
