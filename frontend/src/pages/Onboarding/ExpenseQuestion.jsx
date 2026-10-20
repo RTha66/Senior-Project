@@ -87,9 +87,9 @@ export default function ExpenseQuestion({ items, setItems }) {
                         </div>
                         {/* กดที่ข้อความจะเปิด popup เพื่อแก้ไขข้อมูล */}
                         <div onClick={() => openEdit(item)}
-                            className="flex flex-1 items-center justify-between">
-                            <span className={`text-left text-p ${item.checked ? 'text-blackk' : 'text-gray-400'}`}>{item.name}</span>
-                            <div className="flex items-center gap-[2vw]">
+                            className="flex flex-1 items-center justify-between min-w-0">
+                            <span className={`text-left text-p break-words min-w-0 ${item.checked ? 'text-blackk' : 'text-gray-400'}`}>{item.name}</span>
+                            <div className="flex items-center gap-[2vw] flex-shrink-0">
                                 <span className={`font-bold text-p ${item.checked ? 'text-blackk' : 'text-gray-400 opacity-50'}`}>{item.amount ? Number(item.amount).toLocaleString('th-TH') : '0'}</span>
                                 <span className={`text-p ${item.checked ? 'text-blackk' : 'text-gray-400 opacity-50'}`}>บาท</span>
                             </div>

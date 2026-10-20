@@ -83,10 +83,10 @@ export default function IncomeQusetion({ items, setItems}) {
                             {item.checked && <img src={checkIcon} className="w-[80%] h-[80%]" />}
                         </div>
                         {/* ชื่อรายการ + วันที่ / จน.เงิน*/}
-                        <div onClick={() => handleOpenEdit(item)} className="flex flex-1 justify-between">
+                        <div onClick={() => handleOpenEdit(item)} className="flex flex-1 justify-between min-w-0">
                             {/* ชื่อรายการ + วันที่ */}
                             <div className={`flex flex-col text-left ${item.checked ? 'text-black' : 'text-gray-400'}`}>
-                                <span className='text-p'>
+                                <span className='text-p break-words min-w-0'>
                                     {item.name}
                                 </span>
                                 <span className="text-sm">
@@ -94,7 +94,7 @@ export default function IncomeQusetion({ items, setItems}) {
                                 </span>
                             </div>
                             {/* จน.เงิน */}
-                            <div className="flex items-center gap-[2vw]">
+                            <div className="flex items-center gap-[2vw] flex-shrink-0">
                                 <span className={`font-bold text-p ${item.checked ? 'text-blackk' : 'text-gray-400 opacity-50'}`}>{item.amount ? Number(item.amount).toLocaleString('th-TH') : '0'}</span>
                                 <span className={`text-p ${item.checked ? 'text-blackk' : 'text-gray-400 opacity-50'}`}>บาท</span>
                             </div>
