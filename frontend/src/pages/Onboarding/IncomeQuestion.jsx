@@ -157,7 +157,7 @@ export default function IncomeQusetion({ items, setItems}) {
                                         return (
                                             <div key={day} onClick={() => {setEditingItem({...editingItem, date: String(day)}); setIsDropDownOpen(false);}}
                                             className={`flex items-center justify-between px-4 py-2.5 mx-1.5 rounded-xl text-p transition-colors ${isSelected ? 'bg-pink-50 text-hotpink font-semibold':'text-gray-700'}`}>
-                                                    <span>ทุกวันที่ {day} ของเดือน</span>
+                                                    <span>{day}</span>
                                                     {isSelected && <img src={checkIcon} alt="check" className="w-4 h-4"/>}
                                             </div>
                                         )

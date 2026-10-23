@@ -34,6 +34,7 @@ export default function GoalsPage() {
         <>
             <Topbar title='เป้าหมาย' />
             <MoodGoalsPopup isOpen={isPopupOpen} onClose={handleClosePopup} />
+            
         </>
     );
 }

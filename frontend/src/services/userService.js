@@ -2,6 +2,7 @@
 export async function completeOnboarding(userData = {}) {
     // test
     localStorage.setItem('hasOnboarded', 'true');
+    // เชื่อมและส่งข้อมูลเพื่อไปเก็บใน db
 }
 
 //  เคยทำ Onboarding หรือยัง
