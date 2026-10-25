@@ -126,7 +126,7 @@ export default function ExpenseQuestion({ items, setItems }) {
                         </div>
                         <div className="flex flex-col gap-1">
                             <label className="text-p text-blackk">จำนวนเงิน</label>
-                            <CurrencyInput placeholder='0' value={editingItem.amount} onChange={(val) => { setAmountError(''); setEditingItem({...editingItem, amount: val || ''}); } } 
+                            <CurrencyInput placeholder='0' value={editingItem.amount} onValueChange={(val) => { setAmountError(''); setEditingItem({...editingItem, amount: val || ''}); } } 
                             className={`w-full bg-gray-50 border-[1.5px] rounded-xl p-3 focus:outline-none ${amountError ? 'border-red-500 focus:border-red-500':'border-gray-200 focus:border-bluee'}` } />
                             {/* ตัวหนังสือเตือนถ้าไม่ได้มีข้อความกรอก */}
                             {amountError && <span className="text-sm text-red-500 mt-0.5 ml-1">

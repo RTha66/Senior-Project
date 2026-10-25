@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function CurrencyInput({value, onChange, placeholder, className }) {
+export default function CurrencyInput({value, onValueChange, placeholder, className }) {
     // ใช้คำว่า handel เพื่อบอกว่าฟังก์ชันนี้จะทำงานก็ต่อเมื่อมี event เข้ามา
     // แปลงค่า input มาเอาลูกน้ำออกจากนั้นแปลงเป็น num แล้วส่งไปเปลี่ยนแปลงค่า salary คือ setSalary
     const handleChange = (e) => {
@@ -9,11 +9,11 @@ export default function CurrencyInput({value, onChange, placeholder, className }
         const rawValue = e.target.value.replace(/,/g, '');
         
         if (rawValue === '') {
-            onChange('');
+            onValueChange('');
         } else if (!isNaN(rawValue)) {
             if (rawValue.length > 15) return;
             // ตรงนี้เป็นค่าที่รับมาจากฟังก์ชัน
-            onChange(Number(rawValue));
+            onValueChange(Number(rawValue));
         }
     }
 

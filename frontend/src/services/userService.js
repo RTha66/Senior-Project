@@ -1,4 +1,4 @@
-// บันทึกว่าทำ Oncoarding เสร็จแล้ว
+// บันทึกว่าทำ Onboarding เสร็จแล้ว
 export async function completeOnboarding(userData = {}) {
     // test
     localStorage.setItem('hasOnboarded', 'true');
