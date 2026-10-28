@@ -69,6 +69,11 @@
     display: none;
   }
 
+  html, body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
   /* .custom-scrollbar::-webkit-scrollbar {
     width: 10px;
   }

@@ -1,19 +1,78 @@
-import React from "react";
+import React, { useMemo, useRef, useState, useLayoutEffect, use } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { IconHome2, IconListDetails, IconTargetArrow, IconCalculator } from '@tabler/icons-react'
+import { IconHome2, IconListDetails, IconTargetArrow, IconCalculator } from '@tabler/icons-react';
 
 // ความกว้างของครึ่งวงกลม
 const TILE_WIDTH = 20;
 // ความสูงของครึ่งวงกลม
 const SCALLOP_HEIGHT = 10;
 // ระยะซ้อนทับ
-const OVERLAP = 2;
+const OVERLAP = 3;
 // สีของแถบ Menubar
 const BAR_COLOR = 'var(--color-violet)';
 
-// SVG Tile สำหรับ CSS Mask
-const SVG_MASK = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${TILE_WIDTH} ${SCALLOP_HEIGHT + OVERLAP}'%3E%3Cpath d='M0,${SCALLOP_HEIGHT} A${TILE_WIDTH / 2},${SCALLOP_HEIGHT} 0 0,1 ${TILE_WIDTH},${SCALLOP_HEIGHT} L${TILE_WIDTH},${SCALLOP_HEIGHT + OVERLAP} L0,${SCALLOP_HEIGHT + OVERLAP} Z' fill='%23000'/%3E%3C/svg%3E")`;
+function ScallopEdge({ color = BAR_COLOR }) {
+    const ref = useRef(null);
+    // ดึงค่าเริ่มต้นค.กว้างจอมาใช้ ถ้าเปิดบน Browser ต่างๆคอมมือถือจะมีค่า แต่ถ้าเปิดบนเซิร์ฟเวอร์ (รัน SSR / Next.js) จะไม่มีหน้าจอ window จะเป็น undefined
+    const [width, setWidth] = useState(() => (typeof window !== 'undefined' ? window.innerWidth : 0));
+
+    useLayoutEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const update = () => setWidth(el.clientWidth || window.innerWidth);
+        update();
+        const resize = new ResizeObserver(update);
+        resize.observe(el);
+        // หยุดการทำงาน ของ ResizeObserver เมื่อหน้านี้ถูกปิดหรือเปลี่ยนไปหน้าอื่น
+        return () => resize.disconnect();
+    }, []);
+
+    const w = TILE_WIDTH;
+    const h = SCALLOP_HEIGHT;
+    // ความสูงของ Svg ทั้งชิ้น
+    const total = h + OVERLAP;
+
+    // คำนวณและการสร้าง SVG PAth
+    const { d, svgWidth, offset } = useMemo(() => {
+        if (!width) return { d:'', svgWidth: 0, offset: 0 };
+       
+        // คำนวณจำนวนลูกคลื่นที่ต้องใช้
+        let count = Math.ceil(width / w) + 2;
+        if (count % 2 === 0) count += 1;
+        // หาความกว้างรวมของลูกคลื่น
+        const full = count * w;
+
+        // วาด SVG
+        let path = `M0,${total} L0,${h}`
+        // loop วาดครึ่งวงกลมทีละลูก
+        for (let i = 0; i < count; i++) {
+            path += `A${w/2},${h} 0 0,1 ${(i + 1) * w},${h}`
+        }
+        // ลากเส้นล่างขวาย้อนมาจุดเริ่ม
+        path += `L${full},${total} Z`
+
+        // full จะยาวเกิน width เพราะปัดเศษขึ้น+2 อีกกันเห็นขอบ เลยเอามาลบแล้วหาร 2 จะได้ตัดสองข้าง
+        return {d: path, svgWidth: full, offset: (width - full) / 2};
+    }, [width, w, h, total]);
+
+    return (
+        <div ref={ref} className="w-full overflow-hidden" style={{ height: total }}>
+            {svgWidth > 0 && (
+                <svg
+                    width={svgWidth}
+                    height={total}
+                    viewBox={`0 0 ${svgWidth} ${total}`}
+                    className="block max-w-none"
+                    style={{ marginLeft: offset }}
+                    aria-hidden='true'
+                >
+                    <path d={d} fill={color}/>
+                </svg>
+            )}
+        </div>
+    )
+}
 
 const NAV_ITEMS = [
     {id: 'home', label: 'หน้าหลัก', path: '/dashboard', icon: IconHome2},
@@ -28,23 +87,12 @@ export default function BottomTabBar() {
 
     return(
         <nav className="fixed w-full bottom-0 left-0 right-0 z-40 pointer-events-none">
-            <div className="w-full relative z-10"
-                style={{
-                    height: `${SCALLOP_HEIGHT+OVERLAP}px`,
-                    marginBottom: `-${OVERLAP}px`,
-                    backgroundColor: BAR_COLOR,
-                    // WebkitMaskImg
-                    WebkitMaskImage: SVG_MASK,
-                    WebkitMaskRepeat: 'round on-repeat',
-                    WebkitMaskSize: `${TILE_WIDTH}px auto`,
-                    WebkitMaskPosition: 'left bottom',
-                    // Standard Mask
-                    maskImage: SVG_MASK,
-                    maskRepeat: 'round no-repeat',
-                    maskSize: `${TILE_WIDTH}px auto`,
-                    maskPosition: 'left bottom',
-                }}
-            />
+            {/* ส่วนด้านบน */}
+            <div className="w-full relative z-10" style={{ marginBottom: `-${OVERLAP}px` }}>
+                <ScallopEdge />
+            </div>
+
+            {/* ด้านล่าง */}
             <div className="pointer-events-auto flex items-center justify-around px-3 h-[68px] pb-[env(safe-area-inset-bottom)] w-full relative z-20"
                 style={{backgroundColor: BAR_COLOR}}>
                 {NAV_ITEMS.map((item) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import awesomeIcon from '../assets/awesome_Mood.svg';
+import awesomeIcon from '../assets/great_job_animate.svg';
 
 export default function MoodGoalsPopup({ isOpen, onClose }) {
     // ถ้าไม่ได้เปิดเป็น false ไม่ต้องแสดงอะไรเลย แล้วก็จะไม่สร้าง animate
