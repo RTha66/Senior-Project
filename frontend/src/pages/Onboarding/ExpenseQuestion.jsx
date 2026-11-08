@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import checkIcon from '../../assets/check.svg';
 import addIcon from '../../assets/add.svg';
 import CurrencyInput from '../../components/CurrencyInput';
+import leftArrow from '../../assets/icon_leftArrow.svg';
 
 // items คือค่า ExpenseItems ค่าพวก id, name, checked, amount
 export default function ExpenseQuestion({ items, setItems }) {
@@ -14,6 +15,9 @@ export default function ExpenseQuestion({ items, setItems }) {
     const [nameError, setNameError] = useState('');
     const [amountError, setAmountError] = useState('');
 
+    const [dateError, setDateError] = useState('');
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
     // เปลี่ยนค่า checked
     const toggleChecked = (id) => {
         setItems(items.map(item => item.id === id ? { ...item, checked: !item.checked } : item))
@@ -23,6 +27,8 @@ export default function ExpenseQuestion({ items, setItems }) {
     const openEdit = (item) => {
         setNameError('');
         setAmountError('');
+        setDateError('');
+        setIsDropdownOpen(false);
         setEditingItem({ ...item });
     }
     
@@ -30,7 +36,9 @@ export default function ExpenseQuestion({ items, setItems }) {
     const openAdd = () => {
         setNameError('');
         setAmountError('');
-        setEditingItem({ id: null, name: '', amount: '', checked: true })
+        setDateError('');
+        setIsDropdownOpen(false);
+        setEditingItem({ id: null, name: '', amount: '', checked: true, date: '' })
     }
 
     const handleSave = () => {
@@ -38,6 +46,7 @@ export default function ExpenseQuestion({ items, setItems }) {
         // ล้างค่าอันเก่าออก
         setNameError('');
         setAmountError('');
+        setDateError('');
 
         // ชื่อห้ามว่าง เอา editname ก่อนเพราะว่าเผื่อสร้างมาแล้วยังไม่มีค่า ก็คือ Null & Undifined ถ้าเอา trim ขึ้นก่อนจะ error เพราะจะ trim ค่าสองอันนั้นไม่ได้
         if (!editingItem.name || !editingItem.name.trim()) {
@@ -50,6 +59,10 @@ export default function ExpenseQuestion({ items, setItems }) {
         }
         if (!editingItem.amount || Number(editingItem.amount) <= 0) {
             setAmountError('กรุณากรอกจำนวนเงินให้ถูกต้อง')
+            hasError = true;
+        }
+        if (!editingItem.date) {
+            setDateError('กรุณาเลือกวันที่ต้องจ่าย');
             hasError = true;
         }
 
@@ -88,7 +101,13 @@ export default function ExpenseQuestion({ items, setItems }) {
                         {/* กดที่ข้อความจะเปิด popup เพื่อแก้ไขข้อมูล */}
                         <div onClick={() => openEdit(item)}
                             className="flex flex-1 items-center justify-between min-w-0">
-                            <span className={`text-left text-p break-words min-w-0 ${item.checked ? 'text-blackk' : 'text-gray-400'}`}>{item.name}</span>
+                            {/* <span className={`text-left text-p break-words min-w-0 ${item.checked ? 'text-blackk' : 'text-gray-400'}`}>{item.name}</span> */}
+                            <div className={`flex flex-col text-left ${item.check ? 'text-black' : 'text-gray-400'}`}>
+                                <span className="text-p break-words min-w-0">{item.name}</span>
+                                <span className="text-sm">
+                                    {item.date === '31' ? 'จ่ายทุกวันสิ้นเดือน' : item.date ? `จ่ายทุกวันที่ ${item.date}` : 'ยังไม่ได้ระบุวันที่'}
+                                </span>
+                            </div>
                             <div className="flex items-center gap-[2vw] flex-shrink-0">
                                 <span className={`font-bold text-p ${item.checked ? 'text-blackk' : 'text-gray-400 opacity-50'}`}>{item.amount ? Number(item.amount).toLocaleString('th-TH') : '0'}</span>
                                 <span className={`text-p ${item.checked ? 'text-blackk' : 'text-gray-400 opacity-50'}`}>บาท</span>
@@ -111,6 +130,7 @@ export default function ExpenseQuestion({ items, setItems }) {
                         <h3 className="text-h4 font-bold text-blackk text-center">
                             {editingItem.id == null ? 'เพิ่มรายการค่าใช้จ่าย' : 'แก้ไขรายการ'}
                         </h3>
+                        {/* ชื่อรายการ */}
                         <div className="flex flex-col gap-1">
                             <div className="flex justify-between items-center">
                                 <label className="text-p text-blackk">ชื่อรายการ</label>
@@ -124,6 +144,41 @@ export default function ExpenseQuestion({ items, setItems }) {
                             {nameError && <span className="text-sm text-red-500 mt-0.5 ml-1">
                                 {nameError}</span>}
                         </div>
+                        {/* วันที่ */}
+                        <div className="relative flex flex-col gap-1">
+                            <label className="text-p text-blackk">วันที่ต้องจ่าย</label>
+                            <button type="button" onClick={() => {setDateError(''); setIsDropdownOpen(!isDropdownOpen);}} className={`w-full flex items-center justify-between bg-gray-50 border-[1.5px] rounded-xl p-3 text-left transition-all ${dateError ? 'border-red-500 focus:border-red-500' : 'border-gray-200  focus:border-bluee'}`}>
+                                <span className={editingItem.date ? 'text-blackk font-medium' : 'text-gray-400'}>
+                                    {editingItem.date === '31' ? 'ทุกวันสิ้นเดือน' : editingItem.date ? `ทุกวันที่ ${editingItem.date} ของเดือน` : '--เลือกวันที่จ่าย--'}
+                                </span>
+                                <img src={leftArrow} alt="arrow" className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotage-90' : '-rotate-90'}`}/>
+                            </button>
+                            {/* เมนู dropdown */}
+                            {isDropdownOpen && (
+                                <div className="absolute top-[102%] left-0 w-full bg-white border border-gray-100 rounded-2xl shadow-xl z-50 overflow-hidden py-1.5 max-h-56 overflow-y-auto hide-scrollbar">
+                                    {/* วันสิ้นเดือน */}
+                                    <div onClick={() => {setEditingItem({ ...editingItem, date: '31'}); setIsDropdownOpen(false);}}
+                                        className={`flex  items-center justify-between px-4 py-2.5 mx-1.5 rounded-xl text-p transition-colors ${editingItem.date === '31' ? 'bg-pink-100 text-hotpink font-bold' : 'texy-blackk hover:bg-gray-50'}`}>
+                                            <span>ทุกวันสิ้นเดือน</span>
+                                            {editingItem.date === '31' && <img src={checkIcon} alt="check" className="w-4 h-4"/>}
+                                    </div>
+                                    {/* วันอื่นๆ */}
+                                    {Array.from({length : 30}, (_, i) => i + 1).map((day) => {
+                                        const isSelected = String(editingItem.date) === String(day);
+                                        return (
+                                            <div key={day} onClick={() => {setEditingItem({ ...editingItem, date: String(day)});  setIsDropdownOpen(false);}}
+                                                className={`flex items-center justify-between px-4 py-2.5 mx-1.5 rounded-xl text-p transition-colors ${isSelected ? 'bg-pink-50 text-hotpink font-semibold' : 'text-gray-700 hover:bg-gray-50'}`}>
+                                                    <span>{day}</span>
+                                                    {isSelected && <img src={checkIcon} alt="check" className="w-4 h-4" />}
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            )}
+                            {/* ข้อความ error date */}
+                            {dateError && <span className="text-sm text-red-500 mt-0.5 ml-1">{dateError}</span>}
+                        </div>
+                        {/* จำนวนเงิน */}
                         <div className="flex flex-col gap-1">
                             <label className="text-p text-blackk">จำนวนเงิน</label>
                             <CurrencyInput placeholder='0' value={editingItem.amount} onValueChange={(val) => { setAmountError(''); setEditingItem({...editingItem, amount: val || ''}); } } 
