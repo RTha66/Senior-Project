@@ -10,10 +10,15 @@ import ExpenseQuestion from './ExpenseQuestion';
 import CurrencyInput from '../../components/CurrencyInput';
 import SingleChoiceQuestion from './singleChoiceQuestion';
 import IncomeQusetion from './IncomeQuestion';
+import BudgetQuestion from './BudgetQuestion';
+import ProportionQuestion from './ProportionQuestion';
 
 function OnboardingPage(){
     const navigate = useNavigate();
     const [step, setStep] = useState(0);
+
+    // เก็บเปอร์เซ็นค่าใช้จ่าย
+    const [spendPct, setSpendPct] = useState(null);
 
     useEffect(() => {
         async function verifyStatus() {
@@ -47,9 +52,9 @@ function OnboardingPage(){
     ])
 
     const [expenseItems, setExpenseItems] = useState([
-        {id: 1, name: 'ค่าโทรศัพท์', checked: false, amount: '' },
-        {id: 2, name: 'ค่าที่พัก', checked: false, amount: '' },
-        {id: 3, name: 'ค่าผ่อนรถ', checked: false, amount: '' },
+        {id: 1, name: 'ค่าโทรศัพท์', checked: false, amount: '', date: '' },
+        {id: 2, name: 'ค่าที่พัก', checked: false, amount: '', date: '' },
+        {id: 3, name: 'ค่าผ่อนรถ', checked: false, amount: '', date: '' },
     ])
 
     const [priorityChoice, setPriorityChoice] = useState(null);
@@ -112,13 +117,16 @@ function OnboardingPage(){
                 return <ExpenseQuestion items={expenseItems} setItems={setExpenseItems} />
             case 3:
                 // return <PriorityQuestion selectedID={priorityChoice} setSelectedID={setPriorityChoice} />
+                // return (
+                //     < SingleChoiceQuestion
+                //         title={SINGLE_CHOICE_QUESTIONS[3].title}
+                //         options={SINGLE_CHOICE_QUESTIONS[3].options}
+                //         selectedID={priorityChoice}
+                //         onSelectedID={setPriorityChoice}
+                //     />
+                // )
                 return (
-                    < SingleChoiceQuestion
-                        title={SINGLE_CHOICE_QUESTIONS[3].title}
-                        options={SINGLE_CHOICE_QUESTIONS[3].options}
-                        selectedID={priorityChoice}
-                        onSelectedID={setPriorityChoice}
-                    />
+                    <BudgetQuestion incomeItems={incomeItems} expenseItems={expenseItems} spendPct={spendPct} onSpendChange={setSpendPct} />
                 )
             case 4:
                 // return <CreditAttitudeQuestion selectedID={creditChoice} setSelectedID={setCreditChoice}/>
@@ -132,14 +140,22 @@ function OnboardingPage(){
                 )
             case 5:
                 // return <FinancialGoalQuestion selectedID={goalChoice} setSelectedID={setGoalChoice} />
+                // onpage 5 เดิม (คอมเมนต์ไว้ตามคำขอ):
+                // return (
+                //     < SingleChoiceQuestion
+                //         title={SINGLE_CHOICE_QUESTIONS[5].title}
+                //         options={SINGLE_CHOICE_QUESTIONS[5].options}
+                //         selectedID={goalChoice}
+                //         onSelectedID={setGoalChoice}
+                //     />
+                // )
                 return (
-                    < SingleChoiceQuestion
+                    <ProportionQuestion
                         title={SINGLE_CHOICE_QUESTIONS[5].title}
-                        options={SINGLE_CHOICE_QUESTIONS[5].options}
                         selectedID={goalChoice}
                         onSelectedID={setGoalChoice}
                     />
-                )
+                );
             default:
                 return null;
         }
@@ -151,11 +167,16 @@ function OnboardingPage(){
         switch (step){
             case 1:
                 // return !salary || Number(salary) <= 0;
-                return false;
+                const hasValidIncome = incomeItems.some(
+                    (item) => item.checked && Number(item.amount) > 0
+                );
+                return !hasValidIncome;
+                // return false;
             case 2:
                 return false;
             case 3:
-                return priorityChoice === null;
+                // return priorityChoice === null;
+                return false;
             case 4:
                 return creditChoice === null;
             case 5:
@@ -188,7 +209,7 @@ function OnboardingPage(){
             {/* หน้าแรก step 0 */}
             <div className={`absolute top-[15vh] flex flex-col items-center w-full h-dvh gap-[2vh] text-center z-10 transition-all duration-500 ease-in-out ${step != 0 ? 'opacity-0 invisible' : 'opacity-100 visible'}`}>
                 <p>ยินดีต้อนรับเข้าสู่</p>
-                <h1>ชื่อ APP</h1>
+                <h1>Coney</h1>
                 <p>มาเริ่มจัดการด้านการเงินด้วยกันเถอะ</p>
                 <button onClick={() => setStep(1)} 
                     className='bg-white rounded-full w-[75vw] h-[7vh] mt-[2vh] text-center text-gray-800 font-bold text-[clamp(0.8rem,7vw,1.5rem)]'
