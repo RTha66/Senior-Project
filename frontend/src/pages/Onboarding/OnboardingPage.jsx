@@ -151,7 +151,11 @@ function OnboardingPage(){
         switch (step){
             case 1:
                 // return !salary || Number(salary) <= 0;
-                return false;
+                // return false;
+                const hasValidIncome = incomeItems.some(
+                    (item) => item.checked && Number(item.amount) > 0
+                );
+                return !hasValidIncome;
             case 2:
                 return false;
             case 3:
