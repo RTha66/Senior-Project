@@ -192,7 +192,7 @@ function OnboardingPage(){
             {/* หน้าแรก step 0 */}
             <div className={`absolute top-[15vh] flex flex-col items-center w-full h-dvh gap-[2vh] text-center z-10 transition-all duration-500 ease-in-out ${step != 0 ? 'opacity-0 invisible' : 'opacity-100 visible'}`}>
                 <p>ยินดีต้อนรับเข้าสู่</p>
-                <h1>ชื่อ APP</h1>
+                <h1>Coney</h1>
                 <p>มาเริ่มจัดการด้านการเงินด้วยกันเถอะ</p>
                 <button onClick={() => setStep(1)} 
                     className='bg-white rounded-full w-[75vw] h-[7vh] mt-[2vh] text-center text-gray-800 font-bold text-[clamp(0.8rem,7vw,1.5rem)]'

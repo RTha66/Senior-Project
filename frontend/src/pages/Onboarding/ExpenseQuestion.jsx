@@ -102,7 +102,7 @@ export default function ExpenseQuestion({ items, setItems }) {
                         <div onClick={() => openEdit(item)}
                             className="flex flex-1 items-center justify-between min-w-0">
                             {/* <span className={`text-left text-p break-words min-w-0 ${item.checked ? 'text-blackk' : 'text-gray-400'}`}>{item.name}</span> */}
-                            <div className={`flex flex-col text-left ${item.check ? 'text-black' : 'text-gray-400'}`}>
+                            <div className={`flex flex-col text-left ${item.checked ? 'text-blackk' : 'text-gray-400'}`}>
                                 <span className="text-p break-words min-w-0">{item.name}</span>
                                 <span className="text-sm">
                                     {item.date === '31' ? 'จ่ายทุกวันสิ้นเดือน' : item.date ? `จ่ายทุกวันที่ ${item.date}` : 'ยังไม่ได้ระบุวันที่'}
@@ -151,14 +151,14 @@ export default function ExpenseQuestion({ items, setItems }) {
                                 <span className={editingItem.date ? 'text-blackk font-medium' : 'text-gray-400'}>
                                     {editingItem.date === '31' ? 'ทุกวันสิ้นเดือน' : editingItem.date ? `ทุกวันที่ ${editingItem.date} ของเดือน` : '--เลือกวันที่จ่าย--'}
                                 </span>
-                                <img src={leftArrow} alt="arrow" className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotage-90' : '-rotate-90'}`}/>
+                                <img src={leftArrow} alt="arrow" className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-90' : '-rotate-90'}`}/>
                             </button>
                             {/* เมนู dropdown */}
                             {isDropdownOpen && (
                                 <div className="absolute top-[102%] left-0 w-full bg-white border border-gray-100 rounded-2xl shadow-xl z-50 overflow-hidden py-1.5 max-h-56 overflow-y-auto hide-scrollbar">
                                     {/* วันสิ้นเดือน */}
                                     <div onClick={() => {setEditingItem({ ...editingItem, date: '31'}); setIsDropdownOpen(false);}}
-                                        className={`flex  items-center justify-between px-4 py-2.5 mx-1.5 rounded-xl text-p transition-colors ${editingItem.date === '31' ? 'bg-pink-100 text-hotpink font-bold' : 'texy-blackk hover:bg-gray-50'}`}>
+                                        className={`flex  items-center justify-between px-4 py-2.5 mx-1.5 rounded-xl text-p transition-colors ${editingItem.date === '31' ? 'bg-pink-100 text-hotpink font-bold' : 'text-blackk hover:bg-gray-50'}`}>
                                             <span>ทุกวันสิ้นเดือน</span>
                                             {editingItem.date === '31' && <img src={checkIcon} alt="check" className="w-4 h-4"/>}
                                     </div>
